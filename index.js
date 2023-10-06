@@ -4,8 +4,9 @@ const { v4: uuid } = require('uuid');
 const PORT = 5000;
 const app = express();
 
-app.use(cookieParser());
+const session = {};
 
+app.use(cookieParser());
 
 app.get('/', (req, res) => {
   let id;
@@ -13,11 +14,14 @@ app.get('/', (req, res) => {
 
   if (userId) {
     id = userId;
-    console.log(req.session);
+    console.log({ session });
   } else {
     id = uuid();
-    res.cookie('userId', id, { httpOnly: true });
-    res.cookie('userId2', id);
+
+    session[id] = {
+      secret: 'my secret',
+    }
+    res.cookie('userId', id);
   }
 
   res.send('ok! ID: ' + id);
